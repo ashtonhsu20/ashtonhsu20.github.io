@@ -1,0 +1,195 @@
+<html>
+<head>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+<!-- Load the d3 library. -->
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="datamaps.usa.min.js"></script>
+</head>
+<body>
+
+<!-- The SVG element will go in here -->
+<h1>Estimated US Drug Use by People 12 and Older in the Past Month in 2012</h1>
+<div id="map_container">
+  <div id="map1"></div>
+</div>
+<script>
+
+
+var stateNameToAbbreviation = [];
+var stateTotalPop = [];
+var stateName;
+var colorRed;
+var illicit_drugs_percent=[];
+var obesity_percent = [];
+var marijuana_percent = [];
+var alcohol_percent = [];
+var non_marijuana_percent = [];
+var tobacco_percent = [];
+preProcessDoneAlcohol = false;
+preProcessDoneDrugs=false;
+preProcessDoneObesity=false;
+preProcessDoneMarijuana = false;
+preProcessDoneNonMarijuana = false;
+preProcessDoneTobacco = false;
+
+function preProcessData(){
+
+  //convert names to abbrev
+  d3.csv("states.csv", function(error,data) {
+    data.forEach(function(d){
+      stateName = d['State'];
+      stateNameToAbbreviation[stateName]=d['Abbreviation'];
+      });
+  });
+
+  d3.csv("illicit_drugs_past_month.csv", function(error,data) {
+    data.forEach(function(d,i){
+      //note does not include Total U.S.,Northeast, Midwest, South, West
+      if(d['State']!="Total U.S." && d['State']!= "Northeast" && d['State']!="Midwest" && d['State']!="South"  && d['State']!="West" && d['State']!=""){
+        illicit_drugs_percent.push({"State" : d['State'],
+                             "Percent" : Number(d['12+'])
+         });
+      }
+      if(i==data.length-1){
+        preProcessDoneDrugs=true;
+      }
+    });
+  });
+
+  d3.csv("obesity2013.csv", function(error,data) {
+    data.forEach(function(d,i){
+        obesity_percent.push({"State" : d['State'],
+                      "Percent" : Number(d['prevalence'])
+         });
+      
+      if(i==data.length-1){
+        preProcessDoneObesity=true;
+      }
+    });
+  });
+
+    d3.csv("marijuana_past_month.csv", function(error,data) {
+    data.forEach(function(d,i){
+        marijuana_percent.push({"State" : d['State'],
+                      "Percent" : Number(d['12+'])
+         });
+      
+      if(i==data.length-1){
+        preProcessDoneMarijuana=true;
+      }
+    });
+  });
+
+  d3.csv("alcohol_past_month.csv", function(error,data) {
+    data.forEach(function(d,i){
+        alcohol_percent.push({"State" : d['State'],
+                      "Percent" : Number(d['12+'])
+         });
+      
+      if(i==data.length-1){
+        preProcessDoneAlcohol=true;
+      }
+    });
+  });
+
+  d3.csv("illicit_drugs_non_marijuana_past_month.csv", function(error,data) {
+    data.forEach(function(d,i){
+        non_marijuana_percent.push({"State" : d['State'],
+                      "Percent" : Number(d['12+'])
+         });
+      
+      if(i==data.length-1){
+        preProcessDoneNonMarijuana=true;
+      }
+    });
+  });
+
+    d3.csv("tobacco_use_past_month.csv", function(error,data) {
+    data.forEach(function(d,i){
+        tobacco_percent.push({"State" : d['State'],
+                      "Percent" : Number(d['12+'])
+         });
+      
+      if(i==data.length-1){
+        preProcessDoneTobacco=true;
+      }
+    });
+  });
+}
+
+
+function makeDrugGraph(){
+  //if data has been parsed then go, else wait
+  if (preProcessDoneDrugs && preProcessDoneObesity && preProcessDoneMarijuana && preProcessDoneAlcohol && preProcessDoneNonMarijuana && preProcessDoneTobacco) {
+    colorRed=d3.scale.linear()
+      .domain([d3.min(illicit_drugs_percent,function(d){
+        //minus two so that all states have color
+        return d["Percent"]-2;
+      }), d3.max(illicit_drugs_percent,function(d){
+        return d["Percent"];
+      })])
+      .range(["#FCFBFB", "#FC0000"]);
+
+  d3.csv("illicit_drugs_past_month.csv", function(error,data) {
+    data.forEach(function(d){
+     //console.log(d);
+      var stateName = d['State']
+      var StateAbbreviation = stateNameToAbbreviation[stateName];
+      //replace commas
+      var drugPercent =(d['12+']);
+      //console.log(StateAbbreviation+" : "+drugPercent);
+      drugs.updateChoropleth(help_choloropleth(StateAbbreviation,drugPercent));
+      });
+  });
+
+  var drugs = new Datamap({
+    scope: 'usa',
+    width: 900,
+    height: 500,
+    element: document.getElementById('map1'),
+    geographyConfig: {
+              highlightOnHover: true,
+                 popupTemplate: function(geography, data) {
+                        return "<div class='hoverinfo'><div class='hover_state'>" + geography.properties.name + "</div>" +
+                        "<div class='hover_illicit_drugs'>Illicit Drugs <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,illicit_drugs_percent)+"%</span></div>"+
+                        "<div class='hover_illicit_drugs'>Hard Drugs <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,non_marijuana_percent)+"%</span></div>"+
+                        "<div class='hover_illicit_drugs'>Marijuana <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,marijuana_percent)+"%</span></div>"+
+                        "<div class='hover_illicit_drugs'>Tobacco <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,tobacco_percent)+"%</span></div>"+
+                        "<div class='hover_illicit_drugs'>Alcohol <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,alcohol_percent)+"%</span></div>"+
+                        "<div class='hover_illicit_drugs'>Obesity <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,obesity_percent)+"%</span></div>";
+                        },
+              borderColor: "black",
+          },
+    fills: {
+    defaultFill: colorRed(0)
+    }
+  });
+  }
+  else {
+      setTimeout(makeDrugGraph,100);
+  }
+  
+}
+
+var getPercentByState = function(state,array){
+  for(var i = 0; i<array.length; i++){
+    if(state == array[i]['State']){
+      return array[i]['Percent'];
+    }
+  }
+}
+
+var help_choloropleth = function(state, percentage){
+  var dictionary = {};
+  dictionary[state] = colorRed(percentage)
+  return dictionary;
+}
+
+preProcessData();
+makeDrugGraph();
+</script>
+
+</body>
+</html>

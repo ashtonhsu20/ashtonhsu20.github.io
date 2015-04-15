@@ -1,0 +1,3 @@
+http://www.icpsr.umich.edu/icpsrweb/SAMHDA/studies/34933
+http://www.census.gov/popest/data/national/totals/2014/NST-EST2014-alldata.html
+http://www.fonz.net/blog/archives/2008/04/06/csv-of-states-and-state-abbreviations/
