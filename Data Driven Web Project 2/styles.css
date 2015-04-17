@@ -1,11 +1,14 @@
 
 h1{
-  margin-top: 54px;
+  margin-bottom: 0px;
   font-size: 33px;
 
 }
 body {
-  font-family: "Open Sans"; 
+  font-family: "Open Sans";
+  /*margin: 0 auto;*/
+  display: table; 
+
 }
 
 .hover_state{
@@ -32,8 +35,8 @@ body {
 
 .hoverinfo{
   color: #E5E5E5;
-  width: 140px;
-  height: 140px;
+  width: 160px;
+  height: 160px;
   background: black !important;
   border: 2px solid #8C8A8A !important;
   border-radius: 5px !important;
@@ -44,9 +47,107 @@ body {
 }
 
 #map1{
-  margin: auto;
+  /*margin: auto;*/
+  float: left;
 }
 
 .map_container{
 
+}
+
+.button_container{
+  /*float: left;*/
+}
+
+#drug_button, #income_button, #obesity_button,#tobacco_button,#alcohol_button,#hard_drugs_button,#marijuana_button{
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  height: 30px;
+  text-align: center;
+  width: 150px;
+  padding: 0px 10 10 10;
+  color: black;
+  Margin-top: 20px;
+  font-size: 20px;
+  float: left;
+}
+
+#slider{
+  width: 900px;
+}
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.range-slider {
+  -webkit-appearance: none;
+  width: 300px;
+  height: 10px;
+  border-radius: 5px;
+  background: #ccc;
+  outline: none;
+  display: table;
+  margin: 0 auto;
+}
+
+.input-range {
+  -webkit-appearance: none;
+  width: 900px;
+/*  margin: 0 auto;*/
+  height: 10px;
+  border-radius: 5px;
+  background: #ccc;
+  outline: none;
+
+}
+
+
+.range-slider .input-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #353535;
+  cursor: pointer;
+  -webkit-transition: background .15s ease-in-out;
+  transition: background .15s ease-in-out;
+}
+.range-slider .input-range::-webkit-slider-thumb:hover {
+  background: #e06161;
+}
+.range-slider .input-range:active::-webkit-slider-thumb {
+  background: #e06161;
+}
+.range-slider .input-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: 50%;
+  background: #353535;
+  cursor: pointer;
+  -webkit-transition: background .15s ease-in-out;
+  transition: background .15s ease-in-out;
+}
+.range-slider .input-range::-moz-range-thumb:hover {
+  background: #e06161;
+}
+.range-slider .input-range:active::-moz-range-thumb {
+  background: #e06161;
+}
+
+::-moz-range-track {
+  background: #ccc;
+  border: 0;
+}
+
+input::-moz-focus-inner {
+  border: 0;
+}
+
+.slider_container{
+  display: table;
+  /*margin: 0 auto;*/
 }
