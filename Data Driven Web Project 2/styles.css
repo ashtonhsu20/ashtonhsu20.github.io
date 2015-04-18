@@ -36,7 +36,7 @@ body {
 .hoverinfo{
   color: #E5E5E5;
   width: 160px;
-  height: 160px;
+  height: 200px;
   background: black !important;
   border: 2px solid #8C8A8A !important;
   border-radius: 5px !important;
@@ -46,33 +46,49 @@ body {
   position: absolute !important;
 }
 
-#map1{
-  /*margin: auto;*/
+#map1 ,#map2{
+  left: -88px;
+  /* padding: 0; */
+  position: relative;
   float: left;
 }
 
-.map_container{
+/*#map2{
+  left: -26px;
+  position: relative;
+  float: left;
+}*/
 
+
+
+.map_container_1{
+    width: 644px;
+    float: left;
+
+}
+
+.map_container_2{
+    width: 644px;
+    float: left;
+    margin-left: 28px
 }
 
 .button_container{
   /*float: left;*/
 }
 
-#drug_button, #income_button, #obesity_button,#tobacco_button,#alcohol_button,#hard_drugs_button,#marijuana_button{
-  border-left: 1px solid black;
-  border-right: 1px solid black;
+.drug_button, .income_button, .obesity_button,.tobacco_button,.alcohol_button,.hard_drugs_button,.marijuana_button,.violent_crime_button,.property_crime_button{
   height: 30px;
   text-align: center;
-  width: 150px;
-  padding: 0px 10 10 10;
+  width: 65px;
+  /* padding: 0px 10 10 10; */
   color: black;
-  Margin-top: 20px;
-  font-size: 20px;
+  Margin-top: 10px;
+  font-size: 14px;
   float: left;
 }
 
-#slider{
+.slider{
   width: 900px;
 }
 
@@ -95,7 +111,7 @@ body {
 
 .input-range {
   -webkit-appearance: none;
-  width: 900px;
+  width: 523px;
 /*  margin: 0 auto;*/
   height: 10px;
   border-radius: 5px;
@@ -150,4 +166,12 @@ input::-moz-focus-inner {
 .slider_container{
   display: table;
   /*margin: 0 auto;*/
+}
+
+.legend_container{
+  position: absolute;
+  height: 400px;
+  padding-top: 122px;
+  margin-left: -164px;
+  width: 91px;
 }

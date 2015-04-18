@@ -11,43 +11,103 @@
 <body>
 
 <!-- The SVG element will go in here -->
-<h1>Estimated US Drug Use by People 12 and Older in the Past Month in 2012</h1>
-<div id="map_container">
+<h1>Comparison of 2012 Monthly Illicit Drug Use by People 12 and Older </h1>
+
+<div class= "map_container_1">
+<div id="map_container1">
   <div id="map1"></div>
 </div>
 <div class = "slider_container">
   <div class="range-slider">
-      <input class="input-range" type="range" min ="0" max="6" step ="1" value ="0" oninput = "DrawGraph(this.value)" onchange="DrawGraph(this.value)">
+      <input class="input-range" type="range" min ="0" max="8" step ="1" value ="0" oninput = "DrawGraph(this.value,map1)" onchange="DrawGraph(this.value,map1)" list="select_metric">
+      <datalist id="select_metric">
+      <option>0</option>
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+      <option>6</option>
+      <option>7</option>
+      <option>8</option>
+      </datalist>
   </div> 
   <div class="button_container">
-    <div id="drug_button" onclick="DrawGraph(illicit_drugs_percent);">
+    <div class="drug_button">
       Drug Usage in the Past Month
     </div>
-    <div id="income_button">
+    <div class="income_button">
       Median Income
     </div>
-    <div id="obesity_button">
+    <div class="obesity_button">
       Obesity
     </div>
-    <div id="hard_drugs_button">
+    <div class="hard_drugs_button">
       Hard Drugs
     </div>
-    <div id="marijuana_button">
+    <div class="marijuana_button">
       Marijuana
     </div>
-    <div id="tobacco_button">
+    <div class="tobacco_button">
       Tobacco
     </div>
-    <div id="alcohol_button">
+    <div class="alcohol_button">
       Alcohol
+    </div>
+    <div class="violent_crime_button">
+      Violent Crime
+    </div>
+    <div class="property_crime_button">
+      Property Crime
     </div>
   </div>
 </div>
-
+</div>
+<div class= "map_container_2">
+<div id="map_container2">
+  <div id="map2"></div>
+</div>
+<div class = "slider_container">
+  <div class="range-slider">
+      <input class="input-range" type="range" min ="0" max="8" step ="1" value ="1" oninput = "DrawGraph(this.value,map2)" onchange="DrawGraph(this.value,map2)">
+  </div> 
+  <div class="button_container">
+    <div class="drug_button">
+      Drug Usage in the Past Month
+    </div>
+    <div class="income_button">
+      Median Income
+    </div>
+    <div class="obesity_button">
+      Obesity
+    </div>
+    <div class="hard_drugs_button">
+      Hard Drugs
+    </div>
+    <div class="marijuana_button">
+      Marijuana
+    </div>
+    <div class="tobacco_button">
+      Tobacco
+    </div>
+    <div class="alcohol_button">
+      Alcohol
+    </div>
+    <div class="violent_crime_button">
+      Violent Crime
+    </div>
+    <div class="property_crime_button">
+      Property Crime
+    </div>
+  </div>
+</div>
+</div>
 <script>
 
-var map;
-
+var map1;
+var map2;
+var legendTopText;
+var legendBottomText;
 var stateNameToAbbreviation = [];
 var stateTotalPop = [];
 var stateName;
@@ -59,6 +119,9 @@ var alcohol_percent = [];
 var non_marijuana_percent = [];
 var tobacco_percent = [];
 var income = [];
+var violent_crime_percent = [];
+var property_crime_percent = [];
+preProcessDoneViolentCrime = false;
 preProcessDoneIncome = false;
 preProcessDoneAlcohol = false;
 preProcessDoneDrugs=false;
@@ -79,12 +142,9 @@ function preProcessData(){
 
   d3.csv("illicit_drugs_past_month.csv", function(error,data) {
     data.forEach(function(d,i){
-      //note does not include Total U.S.,Northeast, Midwest, South, West
-      //if(d['State']!="Total U.S." && d['State']!= "Northeast" && d['State']!="Midwest" && d['State']!="South"  && d['State']!="West" && d['State']!=""){
         illicit_drugs_percent.push({"State" : d['State'],
                              "Percent" : Number(d['12+'])
          });
-      //}
       if(i==data.length-1){
         preProcessDoneDrugs=true;
       }
@@ -103,7 +163,7 @@ function preProcessData(){
     });
   });
 
-    d3.csv("marijuana_past_month.csv", function(error,data) {
+  d3.csv("marijuana_past_month.csv", function(error,data) {
     data.forEach(function(d,i){
         marijuana_percent.push({"State" : d['State'],
                       "Percent" : Number(d['12+'])
@@ -162,27 +222,34 @@ function preProcessData(){
       }
     });
   });
+
+  d3.csv("crime_2013.csv", function(error,data) {
+    data.forEach(function(d,i){
+      if(d['State']!="District of Columbia"){
+        violent_crime_percent.push({"State" : d['State'],
+        "Percent" : d['Voilent Crime Rate']
+        });
+         property_crime_percent.push({"State" : d['State'],
+                      "Percent" : d['Property Crime Rate']
+         });
+      }
+      
+      if(i==data.length-1){
+        preProcessDoneViolentCrime=true;
+      }
+    });
+  });
 }
 
 
 function makeChloroplethMap(){
   //if data has been parsed then go, else wait
-  if (preProcessDoneDrugs && preProcessDoneObesity && preProcessDoneMarijuana && preProcessDoneAlcohol && preProcessDoneNonMarijuana && preProcessDoneTobacco && preProcessDoneIncome) {
-    colorRed=d3.scale.linear()
-      .domain([d3.min(illicit_drugs_percent,function(d){
-        //minus two so that all states have color
-        return d["Percent"];
-      }), d3.max(illicit_drugs_percent,function(d){
-        return d["Percent"];
-      })])
-      .range(["#FCFBFB", "#FC0000"]);
+  if (preProcessDoneDrugs && preProcessDoneObesity && preProcessDoneMarijuana && preProcessDoneAlcohol && preProcessDoneNonMarijuana && preProcessDoneTobacco && preProcessDoneIncome && preProcessDoneViolentCrime) {
 
-
-
-  map = new Datamap({
+  map1 = new Datamap({
     scope: 'usa',
-    width: 900,
-    height: 500,
+    width: 700,
+    height: 400,
     element: document.getElementById('map1'),
     geographyConfig: {
               highlightOnHover: true,
@@ -194,7 +261,9 @@ function makeChloroplethMap(){
                         "<div class='hover_illicit_drugs'>Hard Drugs <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,non_marijuana_percent)+"%</span></div>"+
                         "<div class='hover_illicit_drugs'>Marijuana <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,marijuana_percent)+"%</span></div>"+
                         "<div class='hover_illicit_drugs'>Tobacco <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,tobacco_percent)+"%</span></div>"+
-                        "<div class='hover_illicit_drugs'>Alcohol <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,alcohol_percent)+"%</span></div>";
+                        "<div class='hover_illicit_drugs'>Alcohol <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,alcohol_percent)+"%</span></div>"+
+                        "<div class='hover_illicit_drugs'>Violet Crime <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,violent_crime_percent)+"%</span></div>"+
+                        "<div class='hover_illicit_drugs'>Property Crime <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,property_crime_percent)+"%</span></div>";
                         },
               borderColor: "black",
           },
@@ -202,7 +271,36 @@ function makeChloroplethMap(){
     defaultFill: "white"
     }
   });
-  DrawGraph(0);
+
+  map2 = new Datamap({
+    scope: 'usa',
+    width: 700,
+    height: 400,
+    element: document.getElementById('map2'),
+    geographyConfig: {
+              highlightOnHover: true,
+                 popupTemplate: function(geography, data) {
+                        return "<div class='hoverinfo'><div class='hover_state'>" + geography.properties.name + "</div>" +
+                        "<div class='hover_illicit_drugs'>Illicit Drugs <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,illicit_drugs_percent)+"%</span></div>"+
+                        "<div class='hover_illicit_drugs'>Median Income <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,income)+"</span></div>"+
+                        "<div class='hover_illicit_drugs'>Obesity <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,obesity_percent)+"%</span></div>"+
+                        "<div class='hover_illicit_drugs'>Hard Drugs <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,non_marijuana_percent)+"%</span></div>"+
+                        "<div class='hover_illicit_drugs'>Marijuana <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,marijuana_percent)+"%</span></div>"+
+                        "<div class='hover_illicit_drugs'>Tobacco <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,tobacco_percent)+"%</span></div>"+
+                        "<div class='hover_illicit_drugs'>Alcohol <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,alcohol_percent)+"%</span></div>"+
+                        "<div class='hover_illicit_drugs'>Violet Crime <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,violent_crime_percent)+"%</span></div>"+
+                        "<div class='hover_illicit_drugs'>Property Crime <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,property_crime_percent)+"%</span></div>";
+                        },
+              borderColor: "black",
+          },
+    fills: {
+    defaultFill: "white"
+    }
+  });
+  DrawGraph(0,map1);
+  DrawGraph(0,map2);
+
+  DrawLegend(illicit_drugs_percent);
   }
   else {
       setTimeout(makeChloroplethMap,100);
@@ -224,8 +322,7 @@ var help_choloropleth = function(state, percentage){
   return dictionary;
 }
 
-var DrawGraph = function(value){
-  console.log(value);
+var DrawGraph = function(value,map){
   var data = illicit_drugs_percent;
     if(value == 1){
       data = income;
@@ -244,6 +341,12 @@ var DrawGraph = function(value){
     }
     else if(value ==6){
       data = alcohol_percent;
+    }
+    else if(value ==7){
+      data = violent_crime_percent;
+    }
+    else if(value ==8){
+      data = property_crime_percent;
     }
     //have to recalculate color scale
     var max = d3.max(data,function(d){
@@ -268,7 +371,7 @@ var DrawGraph = function(value){
 
     colorRed=d3.scale.linear()
       .domain([min-min*.5,max])
-      .range(["#FCFBFB", "#FC0000"]);
+      .range(["#FCFBFB", "#970000"]);
 
     data.forEach(function(d){
      //console.log(d);
@@ -282,9 +385,237 @@ var DrawGraph = function(value){
         var drugPercent =(d['Percent']);
       }
 
-      //console.log(StateAbbreviation+" : "+drugPercent);
       map.updateChoropleth(help_choloropleth(StateAbbreviation,drugPercent));
     });
+    if(map == map1){
+      UpdateLegend(data,1);
+    }
+    else{
+      UpdateLegend(data,2);
+    }
+    
+}
+
+
+//called once
+var DrawLegend = function(data){
+  data = illicit_drugs_percent;
+
+  var svgL = d3.select("#map_container1").append("svg").attr("class","legend_container");
+
+  var legend = svgL.append("g")
+      .attr("x",0)
+      .attr("y",0)
+      .attr("width", 300)
+      .attr("height",300)
+      .style("fill","blue");
+
+  //calc values
+  var max = d3.max(data,function(d){
+      //if string, need to parse
+      if(typeof d["Percent"] =="string"){
+        return parseFloat(d["Percent"].replace(',',''));
+      }
+      else{
+        return Number((d["Percent"]))
+      }
+    });
+
+  var min = d3.min(data,function(d){
+      //if string, need to parse
+      if(typeof d["Percent"] =="string"){
+        return parseFloat(d["Percent"].replace(',',''));
+      }
+      else{
+        return Number((d["Percent"]))
+      }
+    });
+
+  var minY = 0;
+  var maxY = 200;
+
+  var gradient = svgL
+      .append("linearGradient")
+      .attr("y1", minY)
+      .attr("y2", maxY)
+      .attr("x1", "0")
+      .attr("x2", "0")
+      .attr("id", "gradient")
+      .attr("gradientUnits", "userSpaceOnUse")
+      
+    gradient
+      .append("stop")
+      .attr("offset", "0")
+      .attr("stop-color", colorRed(max));
+
+    gradient
+      .append("stop")
+      .attr("offset", "1")
+      .attr("stop-color", colorRed(min));
+
+    svgL
+      .selectAll("rect")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("x", 0)
+      .attr("y", minY)
+      .attr("width", 20)
+      .attr("height", maxY)
+      .attr("fill", "black")
+      .attr("fill", "url(#gradient)");
+    
+    var legendText = legend.selectAll('text').data([1]);
+    legendText.enter()
+      .append("text")
+      .attr("x", 25)
+      .attr("y", 10)
+      .text(max+"%")
+      .attr("fill", "black")
+      .attr("id","legendMaxText")
+      .style("alignment-baseline","central"); 
+
+    legendText.enter()
+      .append("text")
+      .attr("x", 25)
+      .attr("y", maxY-10)
+      .text(min+"%")
+      .attr("fill", "black")
+      .attr("id","legendMinText")
+      .style("alignment-baseline","central");
+
+    legendTopText = legendMaxText;
+    legendBottomText = legendMinText;
+
+    var svgL = d3.select("#map_container2").append("svg").attr("class","legend_container");
+
+    var legend = svgL.append("g")
+        .attr("x",0)
+        .attr("y",0)
+        .attr("width", 300)
+        .attr("height",300)
+        .style("fill","blue");
+
+  //calc values
+  max = d3.max(data,function(d){
+      //if string, need to parse
+      if(typeof d["Percent"] =="string"){
+        return parseFloat(d["Percent"].replace(',',''));
+      }
+      else{
+        return Number((d["Percent"]))
+      }
+    });
+
+  min = d3.min(data,function(d){
+      //if string, need to parse
+      if(typeof d["Percent"] =="string"){
+        return parseFloat(d["Percent"].replace(',',''));
+      }
+      else{
+        return Number((d["Percent"]))
+      }
+    });
+
+  var minY = 0;
+  var maxY = 200;
+
+  var gradient = svgL
+      .append("linearGradient")
+      .attr("y1", minY)
+      .attr("y2", maxY)
+      .attr("x1", "0")
+      .attr("x2", "0")
+      .attr("id", "gradient")
+      .attr("gradientUnits", "userSpaceOnUse")
+      
+    gradient
+      .append("stop")
+      .attr("offset", "0")
+      .attr("stop-color", colorRed(max));
+
+    gradient
+      .append("stop")
+      .attr("offset", "1")
+      .attr("stop-color", colorRed(min));
+
+    svgL
+      .selectAll("rect")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("x", 0)
+      .attr("y", minY)
+      .attr("width", 20)
+      .attr("height", maxY)
+      .attr("fill", "black")
+      .attr("fill", "url(#gradient)");
+    
+    var legendText = legend.selectAll('text').data([1]);
+    legendText.enter()
+      .append("text")
+      .attr("x", 25)
+      .attr("y", 10)
+      .text(max+"%")
+      .attr("fill", "black")
+      .attr("id","legendMaxText2")
+      .style("alignment-baseline","central"); 
+
+    legendText.enter()
+      .append("text")
+      .attr("x", 25)
+      .attr("y", maxY-10)
+      .text(min+"%")
+      .attr("fill", "black")
+      .attr("id","legendMinText2")
+      .style("alignment-baseline","central");
+
+    legendTopText2 = legendMaxText2;
+    legendBottomText2 = legendMinText2;
+}
+
+var UpdateLegend = function(data,mapNum){
+  if(mapNum==1){
+    if(legendTopText!=undefined){
+      var max = d3.max(data,function(d){
+        return d["Percent"]
+      });
+
+    var min = d3.min(data,function(d){
+        return d["Percent"]
+      });
+      if(typeof max =="string"){
+       legendTopText.textContent = max;
+       legendBottomText.textContent = min;
+      }
+      else{
+       legendTopText.textContent = max + "%";
+       legendBottomText.textContent = min + "%";
+      }
+    }
+  }
+  if(mapNum==2){
+    if(legendTopText!=undefined){
+      var max = d3.max(data,function(d){
+        return d["Percent"]
+      });
+
+    var min = d3.min(data,function(d){
+        return d["Percent"]
+      });
+      if(typeof max =="string"){
+       legendTopText2.textContent = max;
+       legendBottomText2.textContent = min;
+      }
+      else{
+       legendTopText2.textContent = max + "%";
+       legendBottomText2.textContent = min + "%";
+      }
+    }
+  }
+
+
+
 }
 
 preProcessData();
