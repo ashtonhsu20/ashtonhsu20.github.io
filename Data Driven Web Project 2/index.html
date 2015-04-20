@@ -11,7 +11,7 @@
 <body>
 
 <!-- The SVG element will go in here -->
-<h1>Comparison of 2012 Monthly Illicit Drug Use by People 12 and Older </h1>
+<h1>Monthly Comparison of 2012 Illicit Drug Use by People 12 and Older </h1>
 
 <div class= "map_container_1">
 <div id="map_container1">
@@ -34,7 +34,7 @@
   </div> 
   <div class="button_container">
     <div class="drug_button">
-      Drug Usage in the Past Month
+      Illicit Drugs
     </div>
     <div class="income_button">
       Median Income
@@ -73,7 +73,7 @@
   </div> 
   <div class="button_container">
     <div class="drug_button">
-      Drug Usage in the Past Month
+      Illicit Drugs
     </div>
     <div class="income_button">
       Median Income
@@ -301,6 +301,7 @@ function makeChloroplethMap(){
   DrawGraph(0,map2);
 
   DrawLegend(illicit_drugs_percent);
+   DrawGraph(1,map2);
   }
   else {
       setTimeout(makeChloroplethMap,100);
@@ -487,34 +488,24 @@ var DrawLegend = function(data){
     legendTopText = legendMaxText;
     legendBottomText = legendMinText;
 
-    var svgL = d3.select("#map_container2").append("svg").attr("class","legend_container");
-
-    var legend = svgL.append("g")
-        .attr("x",0)
-        .attr("y",0)
-        .attr("width", 300)
-        .attr("height",300)
-        .style("fill","blue");
+  data = income;
+  var svgL = d3.select("#map_container2").append("svg").attr("class","legend_container");
+  var oldMin=min;
+  var oldMax = max;
+  var legend = svgL.append("g")
+      .attr("x",0)
+      .attr("y",0)
+      .attr("width", 300)
+      .attr("height",300)
+      .style("fill","blue");
 
   //calc values
   max = d3.max(data,function(d){
-      //if string, need to parse
-      if(typeof d["Percent"] =="string"){
-        return parseFloat(d["Percent"].replace(',',''));
-      }
-      else{
-        return Number((d["Percent"]))
-      }
+       return (d["Percent"])
     });
 
   min = d3.min(data,function(d){
-      //if string, need to parse
-      if(typeof d["Percent"] =="string"){
-        return parseFloat(d["Percent"].replace(',',''));
-      }
-      else{
-        return Number((d["Percent"]))
-      }
+       return (d["Percent"])
     });
 
   var minY = 0;
@@ -532,12 +523,12 @@ var DrawLegend = function(data){
     gradient
       .append("stop")
       .attr("offset", "0")
-      .attr("stop-color", colorRed(max));
+      .attr("stop-color", colorRed(oldMax));
 
     gradient
       .append("stop")
       .attr("offset", "1")
-      .attr("stop-color", colorRed(min));
+      .attr("stop-color", colorRed(oldMin));
 
     svgL
       .selectAll("rect")
@@ -556,7 +547,7 @@ var DrawLegend = function(data){
       .append("text")
       .attr("x", 25)
       .attr("y", 10)
-      .text(max+"%")
+      .text(max)
       .attr("fill", "black")
       .attr("id","legendMaxText2")
       .style("alignment-baseline","central"); 
@@ -565,7 +556,7 @@ var DrawLegend = function(data){
       .append("text")
       .attr("x", 25)
       .attr("y", maxY-10)
-      .text(min+"%")
+      .text(min)
       .attr("fill", "black")
       .attr("id","legendMinText2")
       .style("alignment-baseline","central");
