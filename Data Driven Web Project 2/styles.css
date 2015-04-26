@@ -64,13 +64,13 @@ body {
 .map_container_1{
     width: 644px;
     float: left;
-
+    margin-bottom: 28px;    
 }
 
 .map_container_2{
     width: 644px;
     float: left;
-    margin-left: 28px
+    margin-bottom: 28px;
 }
 
 .button_container{
@@ -84,7 +84,7 @@ body {
   /* padding: 0px 10 10 10; */
   color: black;
   Margin-top: 10px;
-  font-size: 14px;
+  font-size: 13px;
   float: left;
 }
 
@@ -174,4 +174,82 @@ input::-moz-focus-inner {
   padding-top: 122px;
   margin-left: -164px;
   width: 91px;
+}
+
+.bubble_button_container{
+  /*float: left;*/
+}
+
+.drug_button_bubble, .obesity_button_bubble, .violent_crime_button_bubble, .property_crime_button_bubble{
+  height: 30px;
+  text-align: center;
+  width: 140px;
+  /* padding: 0px 10 10 10; */
+  color: black;
+  Margin-top: 10px;
+  font-size: 13px;
+  float: left;
+}
+
+.bubble_slider_container{
+  display: table;
+  padding-top: 150px;
+  margin-left: 400px;
+  /*margin: 0 auto;*/
+}
+
+.bubble_range-slider {
+  -webkit-appearance: none;
+  width: 300px;
+  height: 10px;
+  border-radius: 5px;
+  background: #ccc;
+  outline: none;
+  display: table;
+  margin: 0 auto;
+}
+
+.bubble_chart_range {
+  -webkit-appearance: none;
+  width: 523px;
+/*  margin: 0 auto;*/
+  height: 10px;
+  border-radius: 5px;
+  background: #ccc;
+  outline: none;
+
+}
+
+
+.bubble_range-slider .bubble_chart_range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #353535;
+  cursor: pointer;
+  -webkit-transition: background .15s ease-in-out;
+  transition: background .15s ease-in-out;
+}
+.bubble_range-slider .bubble_chart_range::-webkit-slider-thumb:hover {
+  background: #e06161;
+}
+.bubble_range-slider .bubble_chart_range:active::-webkit-slider-thumb {
+  background: #e06161;
+}
+.bubble_range-slider .bubble_chart_range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: 50%;
+  background: #353535;
+  cursor: pointer;
+  -webkit-transition: background .15s ease-in-out;
+  transition: background .15s ease-in-out;
+}
+.bubble_range-slider .bubble_chart_range::-moz-range-thumb:hover {
+  background: #e06161;
+}
+.bubble_range-slider .bubble_chart_range:active::-moz-range-thumb {
+  background: #e06161;
 }
