@@ -1,6 +1,6 @@
 <html>
 <head>
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" type="text/css" href="styles.css">
 <!-- Load the d3 library. -->
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
@@ -10,7 +10,7 @@
 <body>
 
 <!-- The SVG element will go in here -->
-<h1>Championship Sport Distribution in Four Major Leagues across US Cities</h1>
+<h1>Major League Sport Distribution Winnings across US Cities Since 1920</h1>
 <div id="map1"></div>
 <h2>Zoomed in Section of Crowded East Coast</h2>
 <div id="map2" class="submap"></div>
@@ -34,7 +34,7 @@ var width = 960,
 var projection = d3.geo.albersUsa();
 
 var path = d3.geo.path().projection(projection);
-  
+	
 var svg = d3.select("#map1").append("svg")
     .attr("width", width)
     .attr("height", height);
@@ -92,25 +92,25 @@ maplegendText.enter()
   .style("alignment-baseline","central"); 
 
 d3.json("us.json", function(error, shapes) {
-  states = topojson.feature(shapes, shapes.objects.states).features;  
-  var statePaths = svg.append("g");
-  statePaths.selectAll("path").data(states).enter()
-    .append("path").attr("d", path)
-    .style("fill", function(){
-      return "#B0B0B0";
-    })
-    .style("stroke", "#ccc");
-  
-  d3.csv("p1Dataset.csv", function (error, rows) {
-    //console.log(rows);
-    p1Data=rows;
-    for (var i=0; i < rows.length;i++){
-      drawnCity[i]=false;
+	states = topojson.feature(shapes, shapes.objects.states).features;	
+	var statePaths = svg.append("g");
+	statePaths.selectAll("path").data(states).enter()
+		.append("path").attr("d", path)
+		.style("fill", function(){
+			return "#B0B0B0";
+		})
+		.style("stroke", "#ccc");
+	
+	d3.csv("p1Dataset.csv", function (error, rows) {
+		//console.log(rows);
+		p1Data=rows;
+		for (var i=0; i < rows.length;i++){
+			drawnCity[i]=false;
       drawnText[i]=false;
-    }
-  });
+		}
+	});
 
-  d3.csv("cities.csv", function(error, data) {
+	d3.csv("newCities.csv", function(error, data) {
     statePaths.selectAll("circle").data(data).enter()
      .append("circle")
        .attr("cx", function(d) {
@@ -120,21 +120,21 @@ d3.json("us.json", function(error, shapes) {
             return projection([d.lon, d.lat])[1];
        })
        .attr("r", function(d){
-        for (var i=0; i < p1Data.length;i++){
-          //check to see if city and state match as well as if the city was drawn or not
-          if ((p1Data[i]["City"]==d["city"]) && (p1Data[i]["State"]==d["state"]) &&(drawnCity[i]==false)){
-            drawnCity[i]=true;
-            return radiusScale(p1Data[i]["4 major leagues champions overall"])*10;
-          }
-        }
-        return 0;
+       	for (var i=0; i < p1Data.length;i++){
+       		//check to see if city and state match as well as if the city was drawn or not
+       		if ((p1Data[i]["City"]==d["city"]) && (p1Data[i]["State"]==d["state"]) &&(drawnCity[i]==false)){
+       			drawnCity[i]=true;
+       			return radiusScale(p1Data[i]["4 major leagues champions overall"])*10;
+       		}
+       	}
+       	return 0;
        })
        .style("fill", "green")
        .style("opacity",0.5);
 
 
 
-  });
+	});
 
 });
 
@@ -177,7 +177,7 @@ d3.json("us.json", function(error, shapes) {
     }
   });
 
-  d3.csv("cities.csv", function(error, data) {
+  d3.csv("newCities.csv", function(error, data) {
     statePaths.selectAll("circle").data(data).enter()
      .append("circle")
        .attr("cx", function(d) {
@@ -380,7 +380,6 @@ d3.csv("pie.csv", function(error, data) {
     });
   });
   data.forEach(function(d) {
-    console.log(d.City)
     var newData = pie(d.ages);
     var outR = Math.sqrt(newData[1].value+newData[2].value+newData[3].value+newData[0].value)*10
     var tempArc = d3.svg.arc().outerRadius(outR).innerRadius(0);
