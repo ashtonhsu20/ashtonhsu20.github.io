@@ -1,6 +1,6 @@
 <html>
 <head>
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" type="text/css" href="styles.css">
 <!-- Load the d3 library. -->
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
@@ -14,16 +14,14 @@
 <div id="map1"></div>
 <h2>Zoomed in Section of Crowded East Coast</h2>
 <div id="map2" class="submap"></div>
-<h1>Cities That Have At Least One Win In All Leagues</h1>
-<div id="map3" class="submap"></div>
-<h1>Single League Championship Distribution, in states</h1>
-<div>The darker color the state gets, the more championships it wins in that particular league.</div>
+<h1>Single League Championship Distribution, in States</h1>
+<div>The darker color the state is colored, the more championships it wins in that particular league.</div>
 <div id="biggercontainer">
-<div id="container1"><h3 class="chloroppleth_heading">MLB</h3></div>
-<div id="container2"><h3 class="chloroppleth_heading">NBA</h3></div>
-<div id="container3"><h3 class="chloroppleth_heading">NFL</h3></div>
-<div id="container4"><h3 class="chloroppleth_heading">NHL</h3></div>
-<div id="container5"><h3 class="chloroppleth_heading">All Four Leages by States</h3></div>
+<div id="container1"><h3 class="chloroppleth_heading">Major League Baseball</h3></div>
+<div id="container2"><h3 class="chloroppleth_heading">National Basketball Association</h3></div>
+<div id="container3"><h3 class="chloroppleth_heading">National Football League</h3></div>
+<div id="container4"><h3 class="chloroppleth_heading">National Hockey League</h3></div>
+<div id="container5"><h3 class="chloroppleth_heading">All Four Leagues by States</h3></div>
 <div id="container6"></div>
 <h3 class="overview">Overview of Total Wins by City</h3>
 </div>
@@ -36,7 +34,7 @@ var width = 960,
 var projection = d3.geo.albersUsa();
 
 var path = d3.geo.path().projection(projection);
-	
+  
 var svg = d3.select("#map1").append("svg")
     .attr("width", width)
     .attr("height", height);
@@ -94,25 +92,25 @@ maplegendText.enter()
   .style("alignment-baseline","central"); 
 
 d3.json("us.json", function(error, shapes) {
-	states = topojson.feature(shapes, shapes.objects.states).features;	
-	var statePaths = svg.append("g");
-	statePaths.selectAll("path").data(states).enter()
-		.append("path").attr("d", path)
-		.style("fill", function(){
-			return "#B0B0B0";
-		})
-		.style("stroke", "#ccc");
-	
-	d3.csv("p1Dataset.csv", function (error, rows) {
-		//console.log(rows);
-		p1Data=rows;
-		for (var i=0; i < rows.length;i++){
-			drawnCity[i]=false;
+  states = topojson.feature(shapes, shapes.objects.states).features;  
+  var statePaths = svg.append("g");
+  statePaths.selectAll("path").data(states).enter()
+    .append("path").attr("d", path)
+    .style("fill", function(){
+      return "#B0B0B0";
+    })
+    .style("stroke", "#ccc");
+  
+  d3.csv("p1Dataset.csv", function (error, rows) {
+    //console.log(rows);
+    p1Data=rows;
+    for (var i=0; i < rows.length;i++){
+      drawnCity[i]=false;
       drawnText[i]=false;
-		}
-	});
+    }
+  });
 
-	d3.csv("cities.csv", function(error, data) {
+  d3.csv("cities.csv", function(error, data) {
     statePaths.selectAll("circle").data(data).enter()
      .append("circle")
        .attr("cx", function(d) {
@@ -122,21 +120,21 @@ d3.json("us.json", function(error, shapes) {
             return projection([d.lon, d.lat])[1];
        })
        .attr("r", function(d){
-       	for (var i=0; i < p1Data.length;i++){
-       		//check to see if city and state match as well as if the city was drawn or not
-       		if ((p1Data[i]["City"]==d["city"]) && (p1Data[i]["State"]==d["state"]) &&(drawnCity[i]==false)){
-       			drawnCity[i]=true;
-       			return radiusScale(p1Data[i]["4 major leagues champions overall"])*10;
-       		}
-       	}
-       	return 0;
+        for (var i=0; i < p1Data.length;i++){
+          //check to see if city and state match as well as if the city was drawn or not
+          if ((p1Data[i]["City"]==d["city"]) && (p1Data[i]["State"]==d["state"]) &&(drawnCity[i]==false)){
+            drawnCity[i]=true;
+            return radiusScale(p1Data[i]["4 major leagues champions overall"])*10;
+          }
+        }
+        return 0;
        })
        .style("fill", "green")
        .style("opacity",0.5);
 
 
 
-	});
+  });
 
 });
 
@@ -356,84 +354,6 @@ var projection3 = d3.geo.albersUsa()
 var path3 = d3.geo.path()
     .projection(projection3);
 
-var svg3 = d3.select("#map3").append("svg")
-    .attr("width", width)
-    .attr("height", height);
-
-var states3 = [];
-
-d3.json("us.json", function(error, shapes) {
-  states3 = topojson.feature(shapes, shapes.objects.states).features;  
-  var statePaths = svg3.append("g");
-  statePaths.selectAll("path").data(states3).enter()
-    .append("path").attr("d", path3)
-    .style("fill", function(){
-      return "#B0B0B0";
-    })
-    .style("stroke", "#ccc");
-
-  var champList = [["New York","NY"], ["Boston","MA"],["Chicago","IL"],["Los Angeles","CA"],["Detroit","MI"],["Philadelphia","PA"]]
-
-  var drawnThirdCity = [false,false,false,false,false,false]
-
-  d3.csv("cities.csv", function(error, data) {
-    statePaths.selectAll("image").data(data).enter()
-     .append("image")
-       .attr("xlink:href", "http://png-5.findicons.com/files/icons/1620/crystal_project/128/keditbookmarks.png")
-       .attr("x", function(d) {
-            return projection3([d.lon, d.lat])[0];
-       })
-       .attr("y", function(d) {
-            return projection3([d.lon, d.lat])[1];
-       })
-       .attr("width",30)
-       .attr("height", function(d){
-        for (var i=0; i < champList.length;i++){
-          //check to see if city and state match as well as if the city was drawn or not
-          if ((champList[i][0]==d["city"]) && (champList[i][1] == d["state"]) && drawnThirdCity[i] == false){
-            drawnThirdCity[i] = true;
-            return 30;
-          }
-        }
-        return 0;
-       })
-
-  var ny=false;
- statePaths.selectAll("text")
-       .data(data)
-       .enter()
-     .append("text") // append text
-       .attr("x", function(d) {
-               return projection([d.lon, d.lat])[0];
-       })
-       .attr("y", function(d) {
-               return projection([d.lon, d.lat])[1];
-       })
-      .style("fill", "black") // fill the text with the colour black
-      .attr("text-anchor", "right") // set anchor y justification
-     // .att('alignment-baseline', "middle")
-      // define the text to display
-      .text(function(d) {
-         for (var i=0; i < p1Data.length;i++){
-          for(var j = 0; j< champList.length; j++){
-             if ((p1Data[i]["City"]==d["city"]) && (p1Data[i]["State"]==d["state"]) &&(drawnText[i]==false) && (champList[j][0]==d["city"])){
-               drawnText[i]=true;
-               return d["city"];
-             }
-             if( d["city"]=="New York" && ny==false){
-              ny=true;
-              return d["city"];
-             }
-          }
-         }
-      
-        return "";
-      }); 
-  });
-
-});
-
-
 var radius = 90,
     padding = 10;
 
@@ -524,40 +444,7 @@ d3.csv("pie.csv", function(error, data) {
             .style("font-size","12px")
             .text(d.City);
     }
-  })
-  /*
-  var svg5 = d3.select("#map5").selectAll(".pie")
-      .data(data)
-    .enter().append("svg")
-      .attr("class", "pie")
-      .attr("width", radius * 2+20)
-      .attr("height", radius * 2+20)
-    .append("g")
-      .attr("class", ".arc")
-      .attr("transform", "translate(" + radius + "," + radius + ")");
-
-  svg5.selectAll(".arc")
-      .data(function(d) { return pie(d.ages); })
-    .enter().append("g")
-      .attr("d", tempArc)
-      .style("fill", function(d) { return color(d.data.name); })
-      .attr("class", "arc");*/
-
- //svg5.append("path")
-      //.attr("d", tempArc);
-      //.style("fill", function(d) { return color(d.data.name); });
-
-  /*svg5.append("path")
-      .attr("d", function(d){
-        var dat = pie(d.ages); 
-        console.log(dat);
-        return d3.svg.arc()
-          .outerRadius(radius)
-          .innerRadius(radius - 30);
-        })
-      .style("fill", function(d) { return color(d.data.name); });*/
-
-  
+  })  
 
 });
 
