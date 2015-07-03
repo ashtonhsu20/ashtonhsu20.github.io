@@ -14,60 +14,17 @@
 <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 </head>
 
-<style>
-body {
-  font: 10px sans-serif;
-}
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.bar {
-  fill: steelblue;
-}
-
-.x.axis path {
-  display: none;
-}
-
-.d3-tip {
-  line-height: 1;
-  font-weight: bold;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 2px;
-}
-
-/* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
-  box-sizing: border-box;
-  display: inline;
-  font-size: 10px;
-  width: 100%;
-  line-height: 1;
-  color: rgba(0, 0, 0, 0.8);
-  content: "\25BC";
-  position: absolute;
-  text-align: center;
-}
-
-/* Style northward tooltips differently */
-.d3-tip.n:after {
-  margin: -1px 0 0 0;
-  top: 100%;
-  left: 0;
-}
-
-</style>
 
 <body>
 
 <!-- The SVG element will go in here -->
 <h1>Monthly Comparison of 2012 Illicit Drug Use by People 12 and Older </h1>
+<p>
+  This project used D3 interactive maps to explore and find correlations between drug usage throughout the U.S. and other factors. We analyzed factors such as region, obesity, crime rate, and median income and attempted to find any relationship between them. 
+</p>
+<p>
+  From our graphs, we concluded that obesity and drug usage have a negative relationship. Additionally there is a slight positive relationship with median income and drug usage. We did not find much of a relationship with property crime or violent crime which could be a because the range of crime is very low.
+</p>
 
 <div class= "map_container_1">
 <div id="map_container1">
@@ -726,176 +683,6 @@ makeChloroplethMap();
 </script>
 
 
-<div id = "bar_chart">
-</div>
-<script>
-var Northeastern = ["Connecticut", "Maine", "Massachusetts", "New Hampshire", "Rhode Island", "Vermont", "New Jersey", "New York", "Pennsylvania"]; 
-
-var MidWestern = ["Illinois", "Indiana", "Michigan", "Ohio", "Wisconsin", "Iowa", "Kansas", "Minnesota", "Missouri", "Nebraska", "North Dakota", "South Dakota"];
-
-var Southern = ["Delaware", "District of Columbia", "Florida", "Georgia", "Maryland", "North Carolina", "South Carolina", "Virginia", "West Virginia", "Alabama", "Kentucky", "Mississippi", "Tennessee", "Arkansas", "Louisiana", "Oklahoma", "Texas"];
-
-var Western = ["Arizona", "Colorado", "Idaho", "Montana", "Nevada", "New Mexico", "Utah", "Wyoming", "Alaska", "California", "Hawaii", "Oregon", "Washington"];
-
-
-function dataByRegion (region, array) {
-    var data = 0;
-    for (var i = 0; i < region.length; i++) {
-      if(typeof getPercentByState(region[i], array) == "string"){
-         data +=  parseFloat(getPercentByState(region[i], array).replace(',','')) *getPercentByState(region[i], population);
-      }
-      else{
-         data += getPercentByState(region[i], array) *getPercentByState(region[i], population);
-      }
-     
-    }
-    return data;
-}
-
-function makeBarGraph(){
-   if (preProcessDoneDrugs && preProcessDoneObesity && preProcessDoneMarijuana && preProcessDoneAlcohol && preProcessDoneNonMarijuana && preProcessDoneTobacco && preProcessDoneIncome && preProcessDoneViolentCrime) {
-
-      var drug_Northeastern = (dataByRegion(Northeastern, illicit_drugs_percent) / getPercentByState("Northeast Region", population)).toFixed(2);
-      var drug_MidWestern = (dataByRegion(MidWestern, illicit_drugs_percent) / getPercentByState("Midwest Region", population)).toFixed(2);
-      var drug_Southern = (dataByRegion(Southern, illicit_drugs_percent) / getPercentByState("South Region", population)).toFixed(2);
-      var drug_Western = (dataByRegion(Western, illicit_drugs_percent) / getPercentByState("West Region", population)).toFixed(2);
-
-      var income_Northeastern = dataByRegion(Northeastern, income) / Number(getPercentByState("Northeast Region", population));
-      var income_MidWestern = dataByRegion(MidWestern, income) / Number(getPercentByState("Midwest Region", population));
-      var income_Southern = dataByRegion(Southern, income) / Number(getPercentByState("South Region", population));
-      var income_Western = dataByRegion(Western, income) / Number(getPercentByState("West Region", population));
-      console.log("income northeastern: "+income_Northeastern);
-
-      var obesity_Northeastern = (dataByRegion(Northeastern, obesity_percent) / getPercentByState("Northeast Region", population)).toFixed(2);
-      var obesity_MidWestern = (dataByRegion(MidWestern, obesity_percent) / getPercentByState("Midwest Region", population)).toFixed(2);
-      var obesity_Southern = (dataByRegion(Southern, obesity_percent) / getPercentByState("South Region", population)).toFixed(2);
-      var obesity_Western = (dataByRegion(Western, obesity_percent) / getPercentByState("West Region", population)).toFixed(2);
-
-      var violent_crime_Northeastern = (dataByRegion(Northeastern, violent_crime_percent) / getPercentByState("Northeast Region", population)).toFixed(4);
-      var violent_crime_MidWestern = (dataByRegion(MidWestern, violent_crime_percent) / getPercentByState("Midwest Region", population)).toFixed(4);
-      var violent_crime_Southern = (dataByRegion(Southern, violent_crime_percent) / getPercentByState("South Region", population)).toFixed(4);
-      var violent_crime_Western = (dataByRegion(Western, violent_crime_percent) / getPercentByState("West Region", population)).toFixed(4);
-
-      var property_crime_Northeastern = (dataByRegion(Northeastern, property_crime_percent) / getPercentByState("Northeast Region", population)).toFixed(4);
-      var property_crime_MidWestern = (dataByRegion(MidWestern, property_crime_percent) / getPercentByState("Midwest Region", population)).toFixed(4);
-      var property_crime_Southern = (dataByRegion(Southern, property_crime_percent) / getPercentByState("South Region", population)).toFixed(4);
-      var property_crime_Western = (dataByRegion(Western, property_crime_percent) / getPercentByState("West Region", population)).toFixed(4);
-
-
-      //bar chart
-      var margin = {top: 50, right: 20, bottom: 30, left: 40},
-          width = 600 - margin.left - margin.right,
-          height = 500 - margin.top - margin.bottom;
-
-      var x0 = d3.scale.ordinal()
-          .rangeRoundBands([0, width], .1);
-
-      var x1 = d3.scale.ordinal();
-
-      var y = d3.scale.linear()
-          .range([height, 0]);
-
-      var color = d3.scale.ordinal()
-          .range(["#BB7365", "#6D748C", "#FF8362", "#79BEDB"]);
-
-      var xAxis = d3.svg.axis()
-          .scale(x0)
-          .orient("bottom");
-
-      var yAxis = d3.svg.axis()
-          .scale(y)
-          .orient("left")
-          .tickFormat(d3.format(".2s"));
-
-
-      var tip = d3.tip()
-          .attr('class', 'd3-tip')
-          .offset([-10, 0])
-          .html(function(d) {
-            return "<strong>Percent:</strong> <span style='color:red'>" + d.value + "%"+ "</span>";
-          })
-      
-      var svg = d3.select("body").append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-      svg.call(tip);
-
-      d3.csv("data.csv", function(error, data) {
-        var category = d3.keys(data[0]).filter(function(key) { return key !== "Region"; });
-
-        data.forEach(function(d) {
-          d.categories = category.map(function(name) { return {name: name, value: +d[name]}; });
-        });
-
-        x0.domain(data.map(function(d) { return d.Region; }));
-        x1.domain(category).rangeRoundBands([0, x0.rangeBand()]);
-        y.domain([0, d3.max(data, function(d) { return d3.max(d.categories, function(d) { return d.value; }); })]);
-
-        svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
-
-        svg.append("g")
-            .attr("class", "y axis")
-            .call(yAxis)
-          .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text("Percent");
-
-        var state = svg.selectAll(".Region")
-            .data(data)
-          .enter().append("g")
-            .attr("class", "g")
-            .attr("transform", function(d) { return "translate(" + x0(d.Region) + ",0)"; });
-
-        state.selectAll("rect")
-            .data(function(d) { return d.categories; })
-          .enter().append("rect")
-            .attr("width", x1.rangeBand())
-            .attr("x", function(d) { return x1(d.name); })
-            .attr("y", function(d) { return y(d.value); })
-            .attr("height", function(d) { return height - y(d.value); })
-            .style("fill", function(d) { return color(d.name); })
-            .on('mouseover', tip.show)
-            .on('mouseout', tip.hide)
-
-        var legend = svg.selectAll(".legend")
-            .data(category.slice().reverse())
-          .enter().append("g")
-            .attr("class", "legend")
-            .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-
-        legend.append("rect")
-            .attr("x", width - 18)
-            .attr("width", 18)
-            .attr("height", 18)
-            .style("fill", color);
-
-
-        legend.append("text")
-            .attr("x", width - 24)
-            .attr("y", 9)
-            .attr("dy", ".35em")
-            .style("text-anchor", "end")
-            .text(function(d) { return d; });
-
-      });
-   }
-  else {
-      setTimeout(makeBarGraph,100);
-  }
-}
-
-
-makeBarGraph();
-</script>
 
 
 
@@ -903,12 +690,7 @@ makeBarGraph();
 
 
 
-
-
-
-
-
-
+<h1>State Bubble Chart Overview of Different Factors</h1>
 <div class = "bubble_slider_container">
   <div class="bubble_range-slider">
 	<input class="bubble_chart_range" type="range" min ="0" max="3" step ="1" value ="0" oninput = "updateBubbleChart(this.value)" onchange="updateBubbleChart(this.value)" list="selection">
@@ -966,7 +748,7 @@ function makeBubbleChart(value) {
 
   var data = merge(data0, newIncome);
   console.log(data);
-  var height = 900;
+  var height = 840;
   var width = 1200;
   
   var maxPercent = d3.max(data,function(d){
@@ -1010,7 +792,7 @@ function makeBubbleChart(value) {
   .orient("left");
   
   svg.append("g").attr("class", "x axis")
-  .attr("transform", "translate(120,720)")
+  .attr("transform", "translate(80,720)")
   .call(xAxis).selectAll("text")  
             .style("text-anchor", "end")
             .attr("dx", "-.8em")
@@ -1026,7 +808,7 @@ function makeBubbleChart(value) {
         .text("State");
   
   svg.append("g").attr("class", "y axis")
-  .attr("transform", "translate(120,0)")
+  .attr("transform", "translate(80,0)")
   .call(yAxis);
   
   svg.append("text")
@@ -1183,5 +965,181 @@ var svg = d3.select("#bubble_chart").transition();
 
 makeBubbleChart(0);
 </script>
+
+
+<div id = "bar_chart">
+<h1>Regional Bar Chart Overview of Different Factors</h1>
+</div>
+<script>
+var Northeastern = ["Connecticut", "Maine", "Massachusetts", "New Hampshire", "Rhode Island", "Vermont", "New Jersey", "New York", "Pennsylvania"]; 
+
+var MidWestern = ["Illinois", "Indiana", "Michigan", "Ohio", "Wisconsin", "Iowa", "Kansas", "Minnesota", "Missouri", "Nebraska", "North Dakota", "South Dakota"];
+
+var Southern = ["Delaware", "District of Columbia", "Florida", "Georgia", "Maryland", "North Carolina", "South Carolina", "Virginia", "West Virginia", "Alabama", "Kentucky", "Mississippi", "Tennessee", "Arkansas", "Louisiana", "Oklahoma", "Texas"];
+
+var Western = ["Arizona", "Colorado", "Idaho", "Montana", "Nevada", "New Mexico", "Utah", "Wyoming", "Alaska", "California", "Hawaii", "Oregon", "Washington"];
+
+
+function dataByRegion (region, array) {
+    var data = 0;
+    for (var i = 0; i < region.length; i++) {
+      if(typeof getPercentByState(region[i], array) == "string"){
+         data +=  parseFloat(getPercentByState(region[i], array).replace(',','')) *getPercentByState(region[i], population);
+      }
+      else{
+         data += getPercentByState(region[i], array) *getPercentByState(region[i], population);
+      }
+     
+    }
+    return data;
+}
+
+function makeBarGraph(){
+   if (preProcessDoneDrugs && preProcessDoneObesity && preProcessDoneMarijuana && preProcessDoneAlcohol && preProcessDoneNonMarijuana && preProcessDoneTobacco && preProcessDoneIncome && preProcessDoneViolentCrime) {
+
+      var drug_Northeastern = (dataByRegion(Northeastern, illicit_drugs_percent) / getPercentByState("Northeast Region", population)).toFixed(2);
+      var drug_MidWestern = (dataByRegion(MidWestern, illicit_drugs_percent) / getPercentByState("Midwest Region", population)).toFixed(2);
+      var drug_Southern = (dataByRegion(Southern, illicit_drugs_percent) / getPercentByState("South Region", population)).toFixed(2);
+      var drug_Western = (dataByRegion(Western, illicit_drugs_percent) / getPercentByState("West Region", population)).toFixed(2);
+
+      var income_Northeastern = dataByRegion(Northeastern, income) / Number(getPercentByState("Northeast Region", population));
+      var income_MidWestern = dataByRegion(MidWestern, income) / Number(getPercentByState("Midwest Region", population));
+      var income_Southern = dataByRegion(Southern, income) / Number(getPercentByState("South Region", population));
+      var income_Western = dataByRegion(Western, income) / Number(getPercentByState("West Region", population));
+      console.log("income northeastern: "+income_Northeastern);
+
+      var obesity_Northeastern = (dataByRegion(Northeastern, obesity_percent) / getPercentByState("Northeast Region", population)).toFixed(2);
+      var obesity_MidWestern = (dataByRegion(MidWestern, obesity_percent) / getPercentByState("Midwest Region", population)).toFixed(2);
+      var obesity_Southern = (dataByRegion(Southern, obesity_percent) / getPercentByState("South Region", population)).toFixed(2);
+      var obesity_Western = (dataByRegion(Western, obesity_percent) / getPercentByState("West Region", population)).toFixed(2);
+
+      var violent_crime_Northeastern = (dataByRegion(Northeastern, violent_crime_percent) / getPercentByState("Northeast Region", population)).toFixed(4);
+      var violent_crime_MidWestern = (dataByRegion(MidWestern, violent_crime_percent) / getPercentByState("Midwest Region", population)).toFixed(4);
+      var violent_crime_Southern = (dataByRegion(Southern, violent_crime_percent) / getPercentByState("South Region", population)).toFixed(4);
+      var violent_crime_Western = (dataByRegion(Western, violent_crime_percent) / getPercentByState("West Region", population)).toFixed(4);
+
+      var property_crime_Northeastern = (dataByRegion(Northeastern, property_crime_percent) / getPercentByState("Northeast Region", population)).toFixed(4);
+      var property_crime_MidWestern = (dataByRegion(MidWestern, property_crime_percent) / getPercentByState("Midwest Region", population)).toFixed(4);
+      var property_crime_Southern = (dataByRegion(Southern, property_crime_percent) / getPercentByState("South Region", population)).toFixed(4);
+      var property_crime_Western = (dataByRegion(Western, property_crime_percent) / getPercentByState("West Region", population)).toFixed(4);
+
+
+      //bar chart
+      var margin = {top: 50, right: 20, bottom: 30, left: 40},
+          width = 600 - margin.left - margin.right,
+          height = 500 - margin.top - margin.bottom;
+
+      var x0 = d3.scale.ordinal()
+          .rangeRoundBands([0, width], .1);
+
+      var x1 = d3.scale.ordinal();
+
+      var y = d3.scale.linear()
+          .range([height, 0]);
+
+      var color = d3.scale.ordinal()
+          .range(["#BB7365", "#6D748C", "#FF8362", "#79BEDB"]);
+
+      var xAxis = d3.svg.axis()
+          .scale(x0)
+          .orient("bottom");
+
+      var yAxis = d3.svg.axis()
+          .scale(y)
+          .orient("left")
+          .tickFormat(d3.format(".2s"));
+
+
+      var tip = d3.tip()
+          .attr('class', 'd3-tip')
+          .offset([-10, 0])
+          .html(function(d) {
+            return "<strong>Percent:</strong> <span style='color:red'>" + d.value + "%"+ "</span>";
+          })
+      
+      var svg = d3.select("#bar_chart").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      svg.call(tip);
+
+      d3.csv("data.csv", function(error, data) {
+        var category = d3.keys(data[0]).filter(function(key) { return key !== "Region"; });
+
+        data.forEach(function(d) {
+          d.categories = category.map(function(name) { return {name: name, value: +d[name]}; });
+        });
+
+        x0.domain(data.map(function(d) { return d.Region; }));
+        x1.domain(category).rangeRoundBands([0, x0.rangeBand()]);
+        y.domain([0, d3.max(data, function(d) { return d3.max(d.categories, function(d) { return d.value; }); })]);
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+          .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Percent");
+
+        var state = svg.selectAll(".Region")
+            .data(data)
+          .enter().append("g")
+            .attr("class", "g")
+            .attr("transform", function(d) { return "translate(" + x0(d.Region) + ",0)"; });
+
+        state.selectAll("rect")
+            .data(function(d) { return d.categories; })
+          .enter().append("rect")
+            .attr("width", x1.rangeBand())
+            .attr("x", function(d) { return x1(d.name); })
+            .attr("y", function(d) { return y(d.value); })
+            .attr("height", function(d) { return height - y(d.value); })
+            .style("fill", function(d) { return color(d.name); })
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide)
+
+        var legend = svg.selectAll(".legend")
+            .data(category.slice().reverse())
+          .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+        legend.append("rect")
+            .attr("x", width - 18)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill", color);
+
+
+        legend.append("text")
+            .attr("x", width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(function(d) { return d; });
+
+      });
+   }
+  else {
+      setTimeout(makeBarGraph,100);
+  }
+}
+
+
+makeBarGraph();
+</script>
+
+
+
 </body>
 </html>

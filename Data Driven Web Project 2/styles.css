@@ -2,12 +2,12 @@
 h1{
   margin-bottom: 0px;
   font-size: 33px;
+  text-align: center;
 
 }
 body {
   font-family: "Open Sans";
-  /*margin: 0 auto;*/
-  display: table; 
+  font-size: 12px;
 
 }
 
@@ -70,7 +70,7 @@ body {
 .map_container_2{
     width: 644px;
     float: left;
-    margin-bottom: 28px;
+    margin-bottom: 87px;
 }
 
 .button_container{
@@ -193,7 +193,7 @@ input::-moz-focus-inner {
 
 .bubble_slider_container{
   display: table;
-  padding-top: 150px;
+  padding-top: 12px;
   margin-left: 400px;
   /*margin: 0 auto;*/
 }
@@ -252,4 +252,57 @@ input::-moz-focus-inner {
 }
 .bubble_range-slider .bubble_chart_range:active::-moz-range-thumb {
   background: #e06161;
+}
+
+
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: steelblue;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+p{
+  font-size: 14px;
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
