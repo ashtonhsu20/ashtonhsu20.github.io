@@ -30,34 +30,8 @@ function makeChloroplethMap(){
       }
     });
 
-    map2 = new Datamap({
-      scope: 'usa',
-      width: 700,
-      height: 400,
-      element: document.getElementById('map2'),
-      geographyConfig: {
-                highlightOnHover: true,
-                   popupTemplate: function(geography, data) {
-                          return "<div class='hoverinfo'><div class='hover_state'>" + geography.properties.name + "</div>" +
-                          "<div class='hover_illicit_drugs'>Illicit Drugs <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,illicit_drugs_percent)+"%</span></div>"+
-                          "<div class='hover_illicit_drugs'>Median Income <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,income)+"</span></div>"+
-                          "<div class='hover_illicit_drugs'>Obesity <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,obesity_percent)+"%</span></div>"+
-                          "<div class='hover_illicit_drugs'>Hard Drugs <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,non_marijuana_percent)+"%</span></div>"+
-                          "<div class='hover_illicit_drugs'>Marijuana <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,marijuana_percent)+"%</span></div>"+
-                          "<div class='hover_illicit_drugs'>Tobacco <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,tobacco_percent)+"%</span></div>"+
-                          "<div class='hover_illicit_drugs'>Alcohol <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,alcohol_percent)+"%</span></div>"+
-                          "<div class='hover_illicit_drugs'>Violet Crime <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,violent_crime_percent)+"%</span></div>"+
-                          "<div class='hover_illicit_drugs'>Property Crime <span class='hover_illicit_percent'>" +  getPercentByState(geography.properties.name,property_crime_percent)+"%</span></div>";
-                          },
-                borderColor: "black",
-            },
-      fills: {
-      defaultFill: "white"
-      }
-    });
     DrawGraph(0,map1);
     DrawLegend(illicit_drugs_percent);
-    DrawGraph(1,map2);
   }
   else {
       setTimeout(makeChloroplethMap,100);
@@ -74,18 +48,13 @@ var DrawGraph = function(value,map){
 
   //set slider text to color of graph
   if(map==map1){
-    d3.selectAll('.'+buttonId[value]).style({'color':'#970000','font-weight': 'bold','font-size': '16px'});
+    d3.selectAll('.'+buttonId[value]).style({'color':'#970000'});
     //set previous text to old style
-    d3.selectAll('.'+buttonId[oldRedSlider]).style({'color':'black','font-weight': 'normal','font-size': '14px'});
+    d3.selectAll('.'+buttonId[oldRedSlider]).style({'color':'black','font-size': '14px'});
     oldRedSlider=value;
   }
-  else{
-    d3.selectAll('.'+buttonId[value]).style({'color':'blue','font-weight': 'bold','font-size': '16px'});
-    d3.selectAll('.'+buttonId[oldBlueSlider]).style({'color':'black','font-weight': 'normal','font-size': '14px'});
-    oldBlueSlider = value;
-  }
-  d3.selectAll('.'+buttonId[oldRedSlider]).style({'color':'#970000','font-weight': 'bold','font-size': '16px'});
-  d3.selectAll('.'+buttonId[oldBlueSlider]).style({'color':'blue','font-weight': 'bold','font-size': '16px'});
+  d3.selectAll('.'+buttonId[oldRedSlider]).style({'color':'#970000','font-size': '14px'});
+  // d3.selectAll('.'+buttonId[oldBlueSlider]).style({'color':'blue','font-weight': 'bold','font-size': '14px'});
 
     if(value == 1){
       data = income;
@@ -244,7 +213,7 @@ var DrawLegend = function(data){
       .attr("fill", "black")
       .attr("id","legendMaxText")
       .style("alignment-baseline","central")
-      .style("font-size","16"); 
+      // .style("font-size","16"); 
 
     legendText.enter()
       .append("text")
@@ -254,7 +223,7 @@ var DrawLegend = function(data){
       .attr("fill", "black")
       .attr("id","legendMinText")
       .style("alignment-baseline","central")
-      .style("font-size","16"); 
+      // .style("font-size","16"); 
 
     legendTopText = legendMaxText;
     legendBottomText = legendMinText;
@@ -314,15 +283,6 @@ var DrawLegend = function(data){
       .attr("fill", "url(#gradient)");
     
     var legendText = legend.selectAll('text').data([1]);
-    legendText.enter()
-      .append("text")
-      .attr("x", 25)
-      .attr("y", 10)
-      .text(max)
-      .attr("fill", "black")
-      .attr("id","legendMaxText2")
-      .style("alignment-baseline","central")
-      .style("font-size","16"); 
 
     legendText.enter()
       .append("text")
@@ -332,10 +292,8 @@ var DrawLegend = function(data){
       .attr("fill", "black")
       .attr("id","legendMinText2")
       .style("alignment-baseline","central")
-      .style("font-size","16"); 
+      // .style("font-size","16"); 
 
-    legendTopText2 = legendMaxText2;
-    legendBottomText2 = legendMinText2;
 }
 
 //called everytime slider is moved
@@ -651,8 +609,8 @@ function makeBarGraph(){
 
 
       //bar chart
-      var margin = {top: 50, right: 20, bottom: 30, left: 40},
-          width = 600 - margin.left - margin.right,
+      var margin = {top: 50, right: 50, bottom: 30, left: 40},
+          width = 600 + margin.left + margin.right,
           height = 500 - margin.top - margin.bottom;
 
       var x0 = d3.scale.ordinal()
@@ -738,7 +696,7 @@ function makeBarGraph(){
             .data(category.slice().reverse())
           .enter().append("g")
             .attr("class", "legend")
-            .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+            .attr("transform", function(d, i) { return "translate(10," + i * 20 + ")"; });
 
         legend.append("rect")
             .attr("x", width - 18)

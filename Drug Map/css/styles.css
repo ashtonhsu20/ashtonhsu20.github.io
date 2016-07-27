@@ -3,11 +3,11 @@ h1{
   margin-bottom: 0px;
   font-size: 33px;
   text-align: center;
-
+  margin-top:50px;
 }
 body {
   font-family: "Open Sans";
-  font-size: 12px;
+  // font-size: 12px;
 
 }
 
@@ -63,8 +63,8 @@ body {
 
 .map_container_1{
     width: 644px;
-    float: left;
-    margin-bottom: 28px;    
+    margin: auto;
+    margin-bottom: 100px;
 }
 
 .map_container_2{
@@ -83,8 +83,8 @@ body {
   width: 65px;
   /* padding: 0px 10 10 10; */
   color: black;
-  Margin-top: 10px;
-  font-size: 13px;
+  margin-top: 10px;
+  font-size: 14px;
   float: left;
 }
 
@@ -183,7 +183,7 @@ input::-moz-focus-inner {
 .drug_button_bubble, .obesity_button_bubble, .violent_crime_button_bubble, .property_crime_button_bubble{
   height: 30px;
   text-align: center;
-  width: 140px;
+  width: 166px;
   /* padding: 0px 10 10 10; */
   color: black;
   Margin-top: 10px;
@@ -194,8 +194,8 @@ input::-moz-focus-inner {
 .bubble_slider_container{
   display: table;
   padding-top: 12px;
-  margin-left: 400px;
-  /*margin: 0 auto;*/
+  // margin-left: 400px;
+  margin: 0 auto;
 }
 
 .bubble_range-slider {
@@ -305,4 +305,13 @@ p{
   width: 500px;
   margin-left: auto;
   margin-right: auto;
+}
+
+hr{
+  width: 80%
+}
+
+.bar_graph_container{
+  width: 644px;
+  margin: auto;
 }
