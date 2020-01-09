@@ -1,0 +1,123 @@
+<html>
+<head>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link href="css/tipsy.css" rel="stylesheet" type="text/css"/>
+</head>
+
+
+<body>
+
+<!-- The SVG element will go in here -->
+<h1>Monthly Comparison of 2012 Illicit Drug Use by People 12 and Older </h1>
+
+
+<div class="map_container_1">
+    <div id="map_container1">
+        <div id="map1"></div>
+    </div>
+
+    <div class="slider_container">
+        <div class="range-slider">
+            <input class="input-range" type="range" min="0" max="8" step="1" value="0"
+                   oninput="DrawGraph(this.value,map1)" list="select_metric">
+            <datalist id="select_metric">
+                <option>0</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+            </datalist>
+        </div>
+
+        <div class="button_container">
+            <div class="drug_button">
+                Drug Usage in the Past Month
+            </div>
+            <div class="income_button">
+                Median Income
+            </div>
+            <div class="obesity_button">
+                Obesity
+            </div>
+            <div class="hard_drugs_button">
+                Hard Drugs
+            </div>
+            <div class="marijuana_button">
+                Marijuana
+            </div>
+            <div class="tobacco_button">
+                Tobacco
+            </div>
+            <div class="alcohol_button">
+                Alcohol
+            </div>
+            <div class="violent_crime_button">
+                Violent Crime
+            </div>
+            <div class="property_crime_button">
+                Property Crime
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<h1>State Bubble Chart Overview of Different Factors</h1>
+<div class="bubble_slider_container">
+    <div class="bubble_range-slider">
+        <input class="bubble_chart_range" type="range" min="0" max="3" step="1" value="0"
+               oninput="updateBubbleChart(this.value)" onchange="updateBubbleChart(this.value)" list="selection">
+        <datalist id="selection">
+            <option>0</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+        </datalist>
+    </div>
+    <div class="bubble_button_container">
+        <div class="drug_button_bubble">
+            Drug Usage in the Past Month
+        </div>
+        <div class="obesity_button_bubble">
+            Obesity Rate
+        </div>
+        <div class="violent_crime_button_bubble">
+            Violent Crime Rate
+        </div>
+        <div class="property_crime_button_bubble">
+            Property Crime Rate
+        </div>
+    </div>
+</div>
+<div id="bubble_chart"></div>
+<hr>
+<div id="bar_chart" class='bar_graph_container'>
+    <h1>Regional Bar Chart Overview of Different Factors</h1>
+</div>
+<p>
+    From our graphs, we concluded that obesity and drug usage have a negative relationship. Additionally there is a
+    slight positive relationship with median income and drug usage. We did not find much of a relationship with property
+    crime or violent crime which could be a because the range of crime is very low.
+</p>
+<!-- D3 code is executed here -->
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery.tipsy.js"></script>
+
+<!-- Load the d3 library. -->
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="js/datamaps.usa.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+
+
+<script src="js/preprocessData.js"></script>
+<script src="js/draw.js"></script>
+
+</body>
+</html>
